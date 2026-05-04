@@ -1,0 +1,134 @@
+using Add_Celendar_Appointment.Models;
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+
+namespace Add_Celendar_Appointment
+{
+    public partial class AddAppointmentForm : Form
+    {
+        public AddAppointmentForm(DateTime defaultStart)
+        {
+            InitializeComponent();
+            dtpStart.Value = defaultStart;
+            dtpEnd.Value   = defaultStart.AddHours(1);
+            UpdateDurationLabel();
+        }
+
+        // ── Duration label update ──────────────────────────────────
+        private void UpdateDurationLabel()
+        {
+            var diff = dtpEnd.Value - dtpStart.Value;
+            if (diff.TotalMinutes <= 0)
+            {
+                lblDuration.Text      = "⚠️  Giờ kết thúc phải sau giờ bắt đầu!";
+                lblDuration.ForeColor = System.Drawing.Color.FromArgb(200, 40, 40);
+            }
+            else
+            {
+                string dur = diff.TotalHours >= 1
+                    ? $"⏱  Thời lượng: {(int)diff.TotalHours} giờ {diff.Minutes} phút"
+                    : $"⏱  Thời lượng: {(int)diff.TotalMinutes} phút";
+                lblDuration.Text      = dur;
+                lblDuration.ForeColor = System.Drawing.Color.FromArgb(60, 120, 200);
+            }
+        }
+
+        private void dtpStart_ValueChanged(object sender, EventArgs e) => UpdateDurationLabel();
+        private void dtpEnd_ValueChanged(object sender, EventArgs e)   => UpdateDurationLabel();
+
+        // ── Save ───────────────────────────────────────────────────
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            // ── Validate ──
+            if (string.IsNullOrWhiteSpace(txtName.Text))
+            {
+                MessageBox.Show("Tên cuộc hẹn không được để trống!",
+                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtName.Focus();
+                return;
+            }
+
+            DateTime start    = dtpStart.Value;
+            DateTime end      = dtpEnd.Value;
+
+            if (end <= start)
+            {
+                MessageBox.Show("Giờ kết thúc phải sau giờ bắt đầu!",
+                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dtpEnd.Focus();
+                return;
+            }
+
+            string name     = txtName.Text.Trim();
+            double duration = (end - start).TotalMinutes;
+
+            // ── Conflict check ──
+            Appointment conflict = CalendarData.FindConflict(start, end);
+            if (conflict != null)
+            {
+                var choice = MessageBox.Show(
+                    $"⚠️  Trùng lịch với:\n\n\"{conflict.Name}\"\n" +
+                    $"({conflict.StartTime:HH:mm} – {conflict.EndTime:HH:mm})\n\n" +
+                    "YES = Thay thế lịch cũ\nNO = Chọn giờ khác",
+                    "Phát hiện trùng lịch", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (choice == DialogResult.No) return;
+                CalendarData.RemoveAppointment(conflict.Id);
+            }
+
+            // ── Group meeting check ──
+            Appointment group = CalendarData.FindGroupMeeting(name, duration);
+            if (group != null)
+            {
+                var join = MessageBox.Show(
+                    $"🔔  Đã có cuộc họp nhóm cùng tên:\n\n\"{group.Name}\"\n\n" +
+                    "YES = Tham gia nhóm họp này\nNO = Tạo lịch hẹn riêng",
+                    "Tham gia họp nhóm?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (join == DialogResult.Yes)
+                {
+                    if (!group.Participants.Contains("Tôi"))
+                        group.Participants.Add("Tôi");
+                    MessageBox.Show(
+                        $"✅  Đã tham gia \"{group.Name}\"\nSố người: {group.Participants.Count}",
+                        "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    DialogResult = DialogResult.OK;
+                    Close();
+                    return;
+                }
+            }
+
+            // ── Save appointment ──
+            int[] minutesMap = { 0, 10, 30, 60 };
+            int   minutes    = minutesMap[cboReminder.SelectedIndex];
+
+            var appointment = new Appointment
+            {
+                Name           = name,
+                Location       = txtLocation.Text.Trim(),
+                StartTime      = start,
+                EndTime        = end,
+                IsGroupMeeting = chkIsGroup.Checked,
+                Participants   = chkIsGroup.Checked
+                    ? new List<string> { "Tôi" }
+                    : new List<string>()
+            };
+
+            if (minutes > 0)
+                appointment.Reminders.Add(new Reminder { MinutesBefore = minutes });
+
+            CalendarData.AddAppointment(appointment);
+
+            MessageBox.Show("✅  Đã thêm lịch hẹn thành công!",
+                "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        // ── Cancel ────────────────────────────────────────────────
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
+    }
+}
