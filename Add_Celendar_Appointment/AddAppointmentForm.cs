@@ -7,12 +7,28 @@ namespace Add_Celendar_Appointment
 {
     public partial class AddAppointmentForm : Form
     {
+        // Chiều cao form khi ẩn/hiện panel Group Info
+        private const int FormHeightNormal = 572;
+        private const int FormHeightGroup  = 572 + 220;   // + chiều cao panelGroup
+
         public AddAppointmentForm(DateTime defaultStart)
         {
             InitializeComponent();
             dtpStart.Value = defaultStart;
             dtpEnd.Value   = defaultStart.AddHours(1);
             UpdateDurationLabel();
+        }
+
+        // ── Toggle hiện/ẩn panel Group Info ──────────────────────
+        private void chkIsGroup_CheckedChanged(object sender, EventArgs e)
+        {
+            bool isGroup       = chkIsGroup.Checked;
+            panelGroup.Visible = isGroup;
+            this.ClientSize    = new System.Drawing.Size(420, isGroup ? FormHeightGroup : FormHeightNormal);
+
+            // Điều chỉnh vị trí panelGroup ngay dưới panelOptions
+            panelGroup.Location = new System.Drawing.Point(15,
+                panelOptions.Bottom + 8);
         }
 
         // ── Duration label update ──────────────────────────────────
@@ -77,19 +93,31 @@ namespace Add_Celendar_Appointment
             }
 
             // ── Group meeting check ──
-            Appointment group = CalendarData.FindGroupMeeting(name, duration);
-            if (group != null)
+            GroupMeeting existingGroup = CalendarData.FindGroupMeeting(name, duration);
+            if (existingGroup != null)
             {
+                string slotInfo = existingGroup.MaxParticipants == 0
+                    ? $"({existingGroup.Participants.Count} người đã tham gia)"
+                    : $"({existingGroup.Participants.Count}/{existingGroup.MaxParticipants} người)";
+
                 var join = MessageBox.Show(
-                    $"🔔  Đã có cuộc họp nhóm cùng tên:\n\n\"{group.Name}\"\n\n" +
+                    $"🔔  Đã có cuộc họp nhóm cùng tên:\n\n\"{existingGroup.Name}\" {slotInfo}\n\n" +
                     "YES = Tham gia nhóm họp này\nNO = Tạo lịch hẹn riêng",
                     "Tham gia họp nhóm?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
                 if (join == DialogResult.Yes)
                 {
-                    if (!group.Participants.Contains("Tôi"))
-                        group.Participants.Add("Tôi");
+                    if (!existingGroup.HasAvailableSlot)
+                    {
+                        MessageBox.Show("❌  Cuộc họp này đã đủ người tham gia!",
+                            "Không thể tham gia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    bool added = existingGroup.AddParticipant("Tôi");
+                    CalendarData.Save();
                     MessageBox.Show(
-                        $"✅  Đã tham gia \"{group.Name}\"\nSố người: {group.Participants.Count}",
+                        $"✅  Đã tham gia \"{existingGroup.Name}\"\n" +
+                        $"Số người: {existingGroup.ParticipantSummary}",
                         "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     DialogResult = DialogResult.OK;
                     Close();
@@ -101,22 +129,42 @@ namespace Add_Celendar_Appointment
             int[] minutesMap = { 0, 10, 30, 60 };
             int   minutes    = minutesMap[cboReminder.SelectedIndex];
 
-            var appointment = new Appointment
+            if (chkIsGroup.Checked)
             {
-                Name           = name,
-                Location       = txtLocation.Text.Trim(),
-                StartTime      = start,
-                EndTime        = end,
-                IsGroupMeeting = chkIsGroup.Checked,
-                Participants   = chkIsGroup.Checked
-                    ? new List<string> { "Tôi" }
-                    : new List<string>()
-            };
+                // Tạo GroupMeeting (lớp con của Appointment)
+                var gm = new GroupMeeting
+                {
+                    Name           = name,
+                    Location       = txtLocation.Text.Trim(),
+                    StartTime      = start,
+                    EndTime        = end,
+                    Organizer      = txtOrganizer.Text.Trim(),
+                    MaxParticipants = (int)numMaxPart.Value,
+                    Agenda         = txtAgenda.Text.Trim(),
+                    JoinLink       = txtJoinLink.Text.Trim(),
+                    Participants   = new List<string> { "Tôi" }
+                };
+                if (minutes > 0)
+                    gm.Reminders.Add(new Reminder { MinutesBefore = minutes });
 
-            if (minutes > 0)
-                appointment.Reminders.Add(new Reminder { MinutesBefore = minutes });
+                CalendarData.AddGroupMeeting(gm);
+            }
+            else
+            {
+                // Tạo Appointment thông thường
+                var appointment = new Appointment
+                {
+                    Name           = name,
+                    Location       = txtLocation.Text.Trim(),
+                    StartTime      = start,
+                    EndTime        = end,
+                    IsGroupMeeting = false
+                };
+                if (minutes > 0)
+                    appointment.Reminders.Add(new Reminder { MinutesBefore = minutes });
 
-            CalendarData.AddAppointment(appointment);
+                CalendarData.AddAppointment(appointment);
+            }
 
             MessageBox.Show("✅  Đã thêm lịch hẹn thành công!",
                 "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);

@@ -10,6 +10,10 @@ namespace Add_Celendar_Appointment.Models
     {
         public static List<Appointment> Appointments { get; private set; } = new List<Appointment>();
 
+        /// <summary>Trả về chỉ các cuộc họp nhóm (GroupMeeting) từ danh sách chung.</summary>
+        public static IEnumerable<GroupMeeting> GroupMeetings =>
+            System.Linq.Enumerable.OfType<GroupMeeting>(Appointments);
+
         private static int _nextId = 1;
 
         // ── File path: %LocalAppData%\CalendarAppointment\data.json ──
@@ -69,6 +73,16 @@ namespace Add_Celendar_Appointment.Models
             Save();
         }
 
+        /// <summary>
+        /// Thêm một GroupMeeting vào danh sách.
+        /// Gọi phương thức này thay vì AddAppointment để giữ kiểu GroupMeeting.
+        /// </summary>
+        public static void AddGroupMeeting(GroupMeeting gm)
+        {
+            gm.IsGroupMeeting = true;   // đảm bảo flag luôn đúng
+            AddAppointment(gm);         // dùng chung logic ID + Save
+        }
+
         public static void RemoveAppointment(int id)
         {
             Appointments.RemoveAll(a => a.Id == id);
@@ -83,13 +97,17 @@ namespace Add_Celendar_Appointment.Models
             return null;
         }
 
-        public static Appointment FindGroupMeeting(string name, double durationMinutes)
+        /// <summary>
+        /// Tìm GroupMeeting trùng tên và thời lượng.
+        /// Trả về kiểu GroupMeeting (null nếu không tìm thấy).
+        /// </summary>
+        public static GroupMeeting FindGroupMeeting(string name, double durationMinutes)
         {
             foreach (var a in Appointments)
-                if (a.IsGroupMeeting
-                    && a.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
-                    && Math.Abs(a.DurationMinutes - durationMinutes) < 1)
-                    return a;
+                if (a is GroupMeeting gm
+                    && gm.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
+                    && Math.Abs(gm.DurationMinutes - durationMinutes) < 1)
+                    return gm;
             return null;
         }
 

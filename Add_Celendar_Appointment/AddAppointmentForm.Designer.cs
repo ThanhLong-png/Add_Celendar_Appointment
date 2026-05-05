@@ -45,6 +45,18 @@ namespace Add_Celendar_Appointment
             this.cboReminder   = new ComboBox();
             this.chkIsGroup    = new CheckBox();
 
+            // Section: Group Info (hiện khi chkIsGroup = true)
+            this.panelGroup      = new Panel();
+            this.lblSecGroup     = new Label();
+            this.lblOrganizer    = new Label();
+            this.txtOrganizer    = new TextBox();
+            this.lblMaxPart      = new Label();
+            this.numMaxPart      = new NumericUpDown();
+            this.lblAgenda       = new Label();
+            this.txtAgenda       = new TextBox();
+            this.lblJoinLink     = new Label();
+            this.txtJoinLink     = new TextBox();
+
             // Buttons
             this.panelFooter   = new Panel();
             this.btnSave       = new Button();
@@ -54,6 +66,7 @@ namespace Add_Celendar_Appointment
             this.panelBasic.SuspendLayout();
             this.panelTime.SuspendLayout();
             this.panelOptions.SuspendLayout();
+            this.panelGroup.SuspendLayout();
             this.panelFooter.SuspendLayout();
             this.SuspendLayout();
 
@@ -151,12 +164,54 @@ namespace Add_Celendar_Appointment
                 { "Không nhắc", "10 phút trước", "30 phút trước", "1 giờ trước" });
             this.cboReminder.SelectedIndex = 0;
 
-            this.chkIsGroup.Text      = "Đây là cuộc họp nhóm";
-            this.chkIsGroup.Font      = new Font("Segoe UI", 10);
-            this.chkIsGroup.ForeColor = Color.FromArgb(30, 40, 80);
-            this.chkIsGroup.AutoSize  = true;
-            this.chkIsGroup.Location  = new Point(210, 60);
-            this.chkIsGroup.Cursor    = Cursors.Hand;
+            this.chkIsGroup.Text             = "Đây là cuộc họp nhóm";
+            this.chkIsGroup.Font             = new Font("Segoe UI", 10);
+            this.chkIsGroup.ForeColor        = Color.FromArgb(30, 40, 80);
+            this.chkIsGroup.AutoSize         = true;
+            this.chkIsGroup.Location         = new Point(210, 60);
+            this.chkIsGroup.Cursor           = Cursors.Hand;
+            this.chkIsGroup.CheckedChanged  += new EventHandler(this.chkIsGroup_CheckedChanged);
+
+            // ── Section: Group Info ───────────────────────────────
+            this.panelGroup.Location  = new Point(15, 511);
+            this.panelGroup.Size      = new Size(390, 210);
+            this.panelGroup.BackColor = Color.White;
+            this.panelGroup.Visible   = false;   // ẩn mặc định
+            this.panelGroup.Controls.AddRange(new Control[]
+            {
+                this.lblSecGroup,
+                this.lblOrganizer, this.txtOrganizer,
+                this.lblMaxPart,   this.numMaxPart,
+                this.lblAgenda,    this.txtAgenda,
+                this.lblJoinLink,  this.txtJoinLink
+            });
+            RoundPanel(this.panelGroup);
+
+            MakeSectionLabel(this.lblSecGroup, "👥  Thông tin họp nhóm", new Point(12, 10));
+
+            MakeLabel(this.lblOrganizer, "Người tổ chức", new Point(12, 38));
+            MakeTextBox(this.txtOrganizer, new Point(12, 56), new Size(175, 28));
+            this.txtOrganizer.PlaceholderText = "Tên người chủ trì...";
+
+            MakeLabel(this.lblMaxPart, "Số người tối đa (0 = không giới hạn)", new Point(200, 38));
+            this.numMaxPart.Location  = new Point(200, 56);
+            this.numMaxPart.Size      = new Size(178, 28);
+            this.numMaxPart.Font      = new Font("Segoe UI", 10);
+            this.numMaxPart.Minimum   = 0;
+            this.numMaxPart.Maximum   = 9999;
+            this.numMaxPart.Value     = 0;
+
+            MakeLabel(this.lblAgenda, "Chương trình / Nội dung", new Point(12, 93));
+            this.txtAgenda.Location    = new Point(12, 111);
+            this.txtAgenda.Size        = new Size(366, 48);
+            this.txtAgenda.Font        = new Font("Segoe UI", 9);
+            this.txtAgenda.Multiline   = true;
+            this.txtAgenda.BorderStyle = BorderStyle.FixedSingle;
+            this.txtAgenda.PlaceholderText = "Mô tả nội dung cuộc họp...";
+
+            MakeLabel(this.lblJoinLink, "Link tham gia (online)", new Point(12, 167));
+            MakeTextBox(this.txtJoinLink, new Point(12, 185), new Size(366, 28));
+            this.txtJoinLink.PlaceholderText = "https://meet.google.com/... hoặc để trống";
 
             // ── Footer: Buttons ───────────────────────────────────
             this.panelFooter.Dock      = DockStyle.Bottom;
@@ -193,16 +248,18 @@ namespace Add_Celendar_Appointment
 
             // ── Form ──────────────────────────────────────────────
             this.Text            = "Thêm lịch hẹn";
-            this.ClientSize      = new Size(420, 572);
+            this.ClientSize      = new Size(420, 572);   // sẽ được điều chỉnh động
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.StartPosition   = FormStartPosition.CenterParent;
             this.MaximizeBox     = false;
             this.MinimizeBox     = false;
             this.BackColor       = Color.FromArgb(238, 242, 250);
+            this.AutoScroll      = true;
 
             this.Controls.Add(this.panelBasic);
             this.Controls.Add(this.panelTime);
             this.Controls.Add(this.panelOptions);
+            this.Controls.Add(this.panelGroup);     // panel nhóm thêm vào sau options
             this.Controls.Add(this.panelHeader);
             this.Controls.Add(this.panelFooter);
 
@@ -214,6 +271,8 @@ namespace Add_Celendar_Appointment
             this.panelTime.PerformLayout();
             this.panelOptions.ResumeLayout(false);
             this.panelOptions.PerformLayout();
+            this.panelGroup.ResumeLayout(false);
+            this.panelGroup.PerformLayout();
             this.panelFooter.ResumeLayout(false);
             this.ResumeLayout(false);
         }
@@ -255,15 +314,18 @@ namespace Add_Celendar_Appointment
         }
 
         // ── Controls ─────────────────────────────────────────────
-        private Panel        panelHeader, panelBasic, panelTime, panelOptions, panelFooter;
-        private Label        lblTitle, lblSubtitle;
-        private Label        lblSecBasic, lblName, lblLocation;
-        private Label        lblSecTime, lblStart, lblEnd, lblDuration;
-        private Label        lblSecOptions, lblReminder;
-        private TextBox      txtName, txtLocation;
+        private Panel          panelHeader, panelBasic, panelTime, panelOptions, panelGroup, panelFooter;
+        private Label          lblTitle, lblSubtitle;
+        private Label          lblSecBasic, lblName, lblLocation;
+        private Label          lblSecTime, lblStart, lblEnd, lblDuration;
+        private Label          lblSecOptions, lblReminder;
+        private Label          lblSecGroup, lblOrganizer, lblMaxPart, lblAgenda, lblJoinLink;
+        private TextBox        txtName, txtLocation;
+        private TextBox        txtOrganizer, txtAgenda, txtJoinLink;
         private DateTimePicker dtpStart, dtpEnd;
-        private ComboBox     cboReminder;
-        private CheckBox     chkIsGroup;
-        private Button       btnSave, btnCancel;
+        private ComboBox       cboReminder;
+        private CheckBox       chkIsGroup;
+        private NumericUpDown  numMaxPart;
+        private Button         btnSave, btnCancel;
     }
 }
