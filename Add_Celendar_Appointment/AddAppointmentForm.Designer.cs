@@ -21,7 +21,6 @@ namespace Add_Celendar_Appointment
             this.lblTitle      = new Label();
             this.lblSubtitle   = new Label();
 
-            // Section: Basic info
             this.panelBasic    = new Panel();
             this.lblSecBasic   = new Label();
             this.lblName       = new Label();
@@ -29,7 +28,6 @@ namespace Add_Celendar_Appointment
             this.lblLocation   = new Label();
             this.txtLocation   = new TextBox();
 
-            // Section: Time
             this.panelTime     = new Panel();
             this.lblSecTime    = new Label();
             this.lblStart      = new Label();
@@ -38,14 +36,12 @@ namespace Add_Celendar_Appointment
             this.dtpEnd        = new DateTimePicker();
             this.lblDuration   = new Label();
 
-            // Section: Options
             this.panelOptions  = new Panel();
             this.lblSecOptions = new Label();
             this.lblReminder   = new Label();
             this.cboReminder   = new ComboBox();
             this.chkIsGroup    = new CheckBox();
 
-            // Section: Group Info (hiện khi chkIsGroup = true)
             this.panelGroup      = new Panel();
             this.lblSecGroup     = new Label();
             this.lblOrganizer    = new Label();
@@ -57,7 +53,6 @@ namespace Add_Celendar_Appointment
             this.lblJoinLink     = new Label();
             this.txtJoinLink     = new TextBox();
 
-            // Buttons
             this.panelFooter   = new Panel();
             this.btnSave       = new Button();
             this.btnCancel     = new Button();
@@ -70,7 +65,6 @@ namespace Add_Celendar_Appointment
             this.panelFooter.SuspendLayout();
             this.SuspendLayout();
 
-            // ── Header ────────────────────────────────────────────
             this.panelHeader.Dock      = DockStyle.Top;
             this.panelHeader.Height    = 62;
             this.panelHeader.BackColor = Color.FromArgb(24, 48, 120);
@@ -96,7 +90,6 @@ namespace Add_Celendar_Appointment
             this.lblSubtitle.Location  = new Point(19, 40);
             this.lblSubtitle.BackColor = Color.Transparent;
 
-            // ── Section: Basic Info ───────────────────────────────
             this.panelBasic.Location  = new Point(15, 75);
             this.panelBasic.Size      = new Size(390, 160);
             this.panelBasic.BackColor = Color.White;
@@ -113,7 +106,6 @@ namespace Add_Celendar_Appointment
             MakeTextBox(this.txtLocation, new Point(12, 117), new Size(366, 30));
             this.txtLocation.PlaceholderText = "Ví dụ: Phòng A101, Online...";
 
-            // ── Section: Time ─────────────────────────────────────
             this.panelTime.Location  = new Point(15, 248);
             this.panelTime.Size      = new Size(390, 130);
             this.panelTime.BackColor = Color.White;
@@ -145,7 +137,6 @@ namespace Add_Celendar_Appointment
             this.lblDuration.AutoSize  = true;
             this.lblDuration.Location  = new Point(12, 97);
 
-            // ── Section: Options ──────────────────────────────────
             this.panelOptions.Location  = new Point(15, 393);
             this.panelOptions.Size      = new Size(390, 105);
             this.panelOptions.BackColor = Color.White;
@@ -172,11 +163,10 @@ namespace Add_Celendar_Appointment
             this.chkIsGroup.Cursor           = Cursors.Hand;
             this.chkIsGroup.CheckedChanged  += new EventHandler(this.chkIsGroup_CheckedChanged);
 
-            // ── Section: Group Info ───────────────────────────────
             this.panelGroup.Location  = new Point(15, 511);
             this.panelGroup.Size      = new Size(390, 210);
             this.panelGroup.BackColor = Color.White;
-            this.panelGroup.Visible   = false;   // ẩn mặc định
+            this.panelGroup.Visible   = false;
             this.panelGroup.Controls.AddRange(new Control[]
             {
                 this.lblSecGroup,
@@ -213,7 +203,6 @@ namespace Add_Celendar_Appointment
             MakeTextBox(this.txtJoinLink, new Point(12, 185), new Size(366, 28));
             this.txtJoinLink.PlaceholderText = "https://meet.google.com/... hoặc để trống";
 
-            // ── Footer: Buttons ───────────────────────────────────
             this.panelFooter.Dock      = DockStyle.Bottom;
             this.panelFooter.Height    = 62;
             this.panelFooter.BackColor = Color.FromArgb(245, 247, 252);
@@ -246,9 +235,8 @@ namespace Add_Celendar_Appointment
             this.btnCancel.Cursor                   = Cursors.Hand;
             this.btnCancel.Click                   += new EventHandler(this.btnCancel_Click);
 
-            // ── Form ──────────────────────────────────────────────
             this.Text            = "Thêm lịch hẹn";
-            this.ClientSize      = new Size(420, 572);   // sẽ được điều chỉnh động
+            this.ClientSize      = new Size(420, 572);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.StartPosition   = FormStartPosition.CenterParent;
             this.MaximizeBox     = false;
@@ -259,7 +247,7 @@ namespace Add_Celendar_Appointment
             this.Controls.Add(this.panelBasic);
             this.Controls.Add(this.panelTime);
             this.Controls.Add(this.panelOptions);
-            this.Controls.Add(this.panelGroup);     // panel nhóm thêm vào sau options
+            this.Controls.Add(this.panelGroup);
             this.Controls.Add(this.panelHeader);
             this.Controls.Add(this.panelFooter);
 
@@ -277,7 +265,6 @@ namespace Add_Celendar_Appointment
             this.ResumeLayout(false);
         }
 
-        // ── UI helpers ────────────────────────────────────────────
         private static void MakeSectionLabel(Label lbl, string text, Point loc)
         {
             lbl.Text      = text;
@@ -313,7 +300,6 @@ namespace Add_Celendar_Appointment
             };
         }
 
-        // ── Controls ─────────────────────────────────────────────
         private Panel          panelHeader, panelBasic, panelTime, panelOptions, panelGroup, panelFooter;
         private Label          lblTitle, lblSubtitle;
         private Label          lblSecBasic, lblName, lblLocation;

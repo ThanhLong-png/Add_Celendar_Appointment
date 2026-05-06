@@ -1,0 +1,16 @@
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\bin\Debug\net10.0-windows\Add_Celendar_Appointment.exe
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\bin\Debug\net10.0-windows\Add_Celendar_Appointment.dll.config
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\bin\Debug\net10.0-windows\Add_Celendar_Appointment.deps.json
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\bin\Debug\net10.0-windows\Add_Celendar_Appointment.runtimeconfig.json
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\bin\Debug\net10.0-windows\Add_Celendar_Appointment.dll
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\bin\Debug\net10.0-windows\Add_Celendar_Appointment.pdb
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\obj\Debug\net10.0-windows\Add_Celendar_Appointment.Properties.Resources.resources
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\obj\Debug\net10.0-windows\Add_Celendar_Appointment.csproj.GenerateResource.cache
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\obj\Debug\net10.0-windows\Add_Celendar_Appointment.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\obj\Debug\net10.0-windows\Add_Celendar_Appointment.csproj.CoreCompileInputs.cache
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\obj\Debug\net10.0-windows\Add_Celendar_Appointment.sourcelink.json
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\obj\Debug\net10.0-windows\Add_Celendar_Appointment.dll
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\obj\Debug\net10.0-windows\refint\Add_Celendar_Appointment.dll
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\obj\Debug\net10.0-windows\Add_Celendar_Appointment.pdb
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\obj\Debug\net10.0-windows\Add_Celendar_Appointment.genruntimeconfig.cache
+C:\Users\nguye\OneDrive\Desktop\TaiLieuHocTap\Session4\OOAD\BaiTap_AddCalendar\Add_Celendar_Appointment\obj\Debug\net10.0-windows\ref\Add_Celendar_Appointment.dll

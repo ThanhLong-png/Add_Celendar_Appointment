@@ -63,7 +63,7 @@ namespace Add_Celendar_Appointment
             CalendarData.Load();
             RefreshAll();
             
-            vScrollBar.Maximum = 24 * 60; // 24 hours * 60px
+            vScrollBar.Maximum = 24 * 60;
             vScrollBar.LargeChange = panelGrid.Height > 0 ? panelGrid.Height : 500;
         }
 
@@ -124,7 +124,7 @@ namespace Add_Celendar_Appointment
             if ((_viewMode == ViewMode.Day || _viewMode == ViewMode.Week) && vScrollBar.Visible)
             {
                 int maxVal = Math.Max(0, vScrollBar.Maximum - vScrollBar.LargeChange + 1);
-                int step = 60; 
+                int step = 60;
                 int newValue = vScrollBar.Value + (e.Delta > 0 ? -step : step);
                 newValue = Math.Clamp(newValue, 0, maxVal);
                 
@@ -182,7 +182,7 @@ namespace Add_Celendar_Appointment
             panelGrid.Invalidate();
         }
 
-        // ── Day header row ────────────────────────────────────────
+
         private void panelDayHdr_Paint(object sender, PaintEventArgs e)
         {
             var g = e.Graphics;
@@ -227,7 +227,7 @@ namespace Add_Celendar_Appointment
             g.DrawLine(pen, 0, panelDayHdr.Height-1, panelDayHdr.Width, panelDayHdr.Height-1);
         }
 
-        // ── Main grid ─────────────────────────────────────────────
+
         private void panelGrid_Paint(object sender, PaintEventArgs e)
         {
             var g = e.Graphics;
@@ -359,7 +359,6 @@ namespace Add_Celendar_Appointment
             using var font = new Font("Segoe UI", 9);
             using var pen = new Pen(Color.FromArgb(218, 220, 224));
             
-            // Draw hours
             for (int i = 0; i <= 24; i++)
             {
                 int y = i * hourHeight - scrollY;
@@ -370,7 +369,6 @@ namespace Add_Celendar_Appointment
                 g.DrawLine(pen, timeWidth, y, panelGrid.Width, y);
             }
             
-            // Draw vertical column lines
             for (int c = 1; c < 7; c++)
             {
                 int x = timeWidth + c * colWidth;
@@ -504,7 +502,7 @@ namespace Add_Celendar_Appointment
                 using var br   = new SolidBrush(c);
                 g.FillPath(br, path);
                 
-                _hitTests.Add(Tuple.Create(chip, a)); 
+                _hitTests.Add(Tuple.Create(chip, a));
                 
                 string label = a.Name.Length > 18 ? a.Name[..15] + "…" : a.Name;
                 using var sf  = new StringFormat { LineAlignment = StringAlignment.Center, FormatFlags = StringFormatFlags.NoWrap, Trimming = StringTrimming.EllipsisCharacter };
@@ -521,7 +519,7 @@ namespace Add_Celendar_Appointment
             }
         }
 
-        // ── Mini calendar ─────────────────────────────────────────
+
         private void panelMiniCal_Paint(object sender, PaintEventArgs e)
         {
             var g    = e.Graphics;
@@ -600,7 +598,7 @@ namespace Add_Celendar_Appointment
             RefreshAll();
         }
 
-        // ── Grid click → view/add appointment ─────────────────────────
+
         private void panelGrid_MouseClick(object sender, MouseEventArgs e)
         {
             for (int i = _hitTests.Count - 1; i >= 0; i--)

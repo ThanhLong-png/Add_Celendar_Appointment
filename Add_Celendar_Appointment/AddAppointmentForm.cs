@@ -7,9 +7,8 @@ namespace Add_Celendar_Appointment
 {
     public partial class AddAppointmentForm : Form
     {
-        // Chiều cao form khi ẩn/hiện panel Group Info
         private const int FormHeightNormal = 572;
-        private const int FormHeightGroup  = 572 + 220;   // + chiều cao panelGroup
+        private const int FormHeightGroup  = 572 + 220;
 
         public AddAppointmentForm(DateTime defaultStart)
         {
@@ -19,19 +18,16 @@ namespace Add_Celendar_Appointment
             UpdateDurationLabel();
         }
 
-        // ── Toggle hiện/ẩn panel Group Info ──────────────────────
         private void chkIsGroup_CheckedChanged(object sender, EventArgs e)
         {
             bool isGroup       = chkIsGroup.Checked;
             panelGroup.Visible = isGroup;
             this.ClientSize    = new System.Drawing.Size(420, isGroup ? FormHeightGroup : FormHeightNormal);
 
-            // Điều chỉnh vị trí panelGroup ngay dưới panelOptions
             panelGroup.Location = new System.Drawing.Point(15,
                 panelOptions.Bottom + 8);
         }
 
-        // ── Duration label update ──────────────────────────────────
         private void UpdateDurationLabel()
         {
             var diff = dtpEnd.Value - dtpStart.Value;
@@ -53,10 +49,8 @@ namespace Add_Celendar_Appointment
         private void dtpStart_ValueChanged(object sender, EventArgs e) => UpdateDurationLabel();
         private void dtpEnd_ValueChanged(object sender, EventArgs e)   => UpdateDurationLabel();
 
-        // ── Save ───────────────────────────────────────────────────
         private void btnSave_Click(object sender, EventArgs e)
         {
-            // ── Validate ──
             if (string.IsNullOrWhiteSpace(txtName.Text))
             {
                 MessageBox.Show("Tên cuộc hẹn không được để trống!",
@@ -79,7 +73,6 @@ namespace Add_Celendar_Appointment
             string name     = txtName.Text.Trim();
             double duration = (end - start).TotalMinutes;
 
-            // ── Conflict check ──
             Appointment conflict = CalendarData.FindConflict(start, end);
             if (conflict != null)
             {
@@ -92,7 +85,6 @@ namespace Add_Celendar_Appointment
                 CalendarData.RemoveAppointment(conflict.Id);
             }
 
-            // ── Group meeting check ──
             GroupMeeting existingGroup = CalendarData.FindGroupMeeting(name, duration);
             if (existingGroup != null)
             {
@@ -125,13 +117,11 @@ namespace Add_Celendar_Appointment
                 }
             }
 
-            // ── Save appointment ──
             int[] minutesMap = { 0, 10, 30, 60 };
             int   minutes    = minutesMap[cboReminder.SelectedIndex];
 
             if (chkIsGroup.Checked)
             {
-                // Tạo GroupMeeting (lớp con của Appointment)
                 var gm = new GroupMeeting
                 {
                     Name           = name,
@@ -151,7 +141,6 @@ namespace Add_Celendar_Appointment
             }
             else
             {
-                // Tạo Appointment thông thường
                 var appointment = new Appointment
                 {
                     Name           = name,
@@ -172,7 +161,6 @@ namespace Add_Celendar_Appointment
             Close();
         }
 
-        // ── Cancel ────────────────────────────────────────────────
         private void btnCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;

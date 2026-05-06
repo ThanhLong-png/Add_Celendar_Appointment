@@ -10,13 +10,11 @@ namespace Add_Celendar_Appointment.Models
     {
         public static List<Appointment> Appointments { get; private set; } = new List<Appointment>();
 
-        /// <summary>Trả về chỉ các cuộc họp nhóm (GroupMeeting) từ danh sách chung.</summary>
         public static IEnumerable<GroupMeeting> GroupMeetings =>
             System.Linq.Enumerable.OfType<GroupMeeting>(Appointments);
 
         private static int _nextId = 1;
 
-        // ── File path: %LocalAppData%\CalendarAppointment\data.json ──
         private static readonly string _filePath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "CalendarAppointment", "data.json");
@@ -27,7 +25,6 @@ namespace Add_Celendar_Appointment.Models
             PropertyNameCaseInsensitive = true
         };
 
-        // ── Load from disk ─────────────────────────────────────────
         public static void Load()
         {
             try
@@ -43,13 +40,11 @@ namespace Add_Celendar_Appointment.Models
             }
             catch
             {
-                // If file is corrupted, start fresh
                 Appointments = new List<Appointment>();
                 _nextId      = 1;
             }
         }
 
-        // ── Save to disk ───────────────────────────────────────────
         public static void Save()
         {
             try
@@ -62,10 +57,9 @@ namespace Add_Celendar_Appointment.Models
                 string json = JsonSerializer.Serialize(data, _jsonOpts);
                 File.WriteAllText(_filePath, json);
             }
-            catch { /* ignore save errors silently */ }
+            catch { }
         }
 
-        // ── CRUD ───────────────────────────────────────────────────
         public static void AddAppointment(Appointment a)
         {
             a.Id = _nextId++;
@@ -73,14 +67,10 @@ namespace Add_Celendar_Appointment.Models
             Save();
         }
 
-        /// <summary>
-        /// Thêm một GroupMeeting vào danh sách.
-        /// Gọi phương thức này thay vì AddAppointment để giữ kiểu GroupMeeting.
-        /// </summary>
         public static void AddGroupMeeting(GroupMeeting gm)
         {
-            gm.IsGroupMeeting = true;   // đảm bảo flag luôn đúng
-            AddAppointment(gm);         // dùng chung logic ID + Save
+            gm.IsGroupMeeting = true;
+            AddAppointment(gm);
         }
 
         public static void RemoveAppointment(int id)
@@ -97,10 +87,6 @@ namespace Add_Celendar_Appointment.Models
             return null;
         }
 
-        /// <summary>
-        /// Tìm GroupMeeting trùng tên và thời lượng.
-        /// Trả về kiểu GroupMeeting (null nếu không tìm thấy).
-        /// </summary>
         public static GroupMeeting FindGroupMeeting(string name, double durationMinutes)
         {
             foreach (var a in Appointments)
@@ -119,7 +105,6 @@ namespace Add_Celendar_Appointment.Models
             return max + 1;
         }
 
-        // ── DTO for serialization ──────────────────────────────────
         private class SaveData
         {
             public List<Appointment> Appointments { get; set; } = new List<Appointment>();

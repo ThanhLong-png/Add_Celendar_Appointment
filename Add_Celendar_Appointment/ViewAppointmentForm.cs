@@ -18,21 +18,17 @@ namespace Add_Celendar_Appointment
 
         private void LoadData()
         {
-            // ── Thông tin cơ bản ──────────────────────────────────
             lblTitle.Text    = _appt.Name;
             lblTime.Text     = $"🕐 {_appt.StartTime:dd/MM/yyyy HH:mm} – {_appt.EndTime:HH:mm}";
             lblLocation.Text = string.IsNullOrEmpty(_appt.Location)
                 ? "📍 Không có địa điểm"
                 : $"📍 {_appt.Location}";
 
-            // ── Loại lịch ─────────────────────────────────────────
             if (_appt is GroupMeeting gm)
             {
-                // Hiển thị badge "Họp nhóm"
                 lblType.Text      = "👥 Cuộc họp nhóm";
                 lblType.ForeColor = Color.MediumBlue;
 
-                // Hiện panel thông tin nhóm
                 panelGroupInfo.Visible = true;
 
                 lblOrganizer.Text = string.IsNullOrEmpty(gm.Organizer)
@@ -51,7 +47,6 @@ namespace Add_Celendar_Appointment
                 else
                     lblJoinLink.Visible = false;
 
-                // Mở rộng form để hiện panel nhóm
                 int btnY = panelGroupInfo.Bottom + 14;
                 btnDelete.Location = new Point(25, btnY);
                 btnClose.Location  = new Point(140, btnY);
@@ -64,7 +59,6 @@ namespace Add_Celendar_Appointment
 
                 panelGroupInfo.Visible = false;
 
-                // Form nhỏ gọn cho lịch cá nhân
                 btnDelete.Location = new Point(25, 160);
                 btnClose.Location  = new Point(140, 160);
                 this.ClientSize    = new Size(400, 220);

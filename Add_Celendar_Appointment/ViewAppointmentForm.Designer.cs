@@ -22,7 +22,6 @@ namespace Add_Celendar_Appointment
             this.lblLocation     = new Label();
             this.lblType         = new Label();
 
-            // Group info labels (hiển thị khi là GroupMeeting)
             this.panelGroupInfo  = new Panel();
             this.lblGroupSep     = new Label();
             this.lblOrganizer    = new Label();
@@ -36,12 +35,10 @@ namespace Add_Celendar_Appointment
 
             this.SuspendLayout();
 
-            // ── Accent bar ────────────────────────────────────────
             this.panelTop.BackColor = Color.FromArgb(26, 115, 232);
             this.panelTop.Dock      = DockStyle.Top;
             this.panelTop.Height    = 8;
 
-            // ── Basic labels ──────────────────────────────────────
             this.lblTitle.AutoSize    = true;
             this.lblTitle.Font        = new Font("Segoe UI", 16, FontStyle.Bold);
             this.lblTitle.ForeColor   = Color.FromArgb(60, 64, 67);
@@ -62,7 +59,6 @@ namespace Add_Celendar_Appointment
             this.lblType.Font      = new Font("Segoe UI", 10, FontStyle.Italic);
             this.lblType.Location  = new Point(22, 118);
 
-            // ── Group info panel ──────────────────────────────────
             this.panelGroupInfo.Location  = new Point(15, 148);
             this.panelGroupInfo.Size      = new Size(370, 150);
             this.panelGroupInfo.BackColor = Color.FromArgb(240, 245, 255);
@@ -73,7 +69,6 @@ namespace Add_Celendar_Appointment
                 e.Graphics.DrawRectangle(pen, 0, 0, panelGroupInfo.Width - 1, panelGroupInfo.Height - 1);
             };
 
-            // Separator label (tiêu đề panel)
             this.lblGroupSep.Text      = "👥  Thông tin họp nhóm";
             this.lblGroupSep.Font      = new Font("Segoe UI", 9, FontStyle.Bold);
             this.lblGroupSep.ForeColor = Color.FromArgb(37, 99, 220);
@@ -107,13 +102,12 @@ namespace Add_Celendar_Appointment
                 this.lblParticipants, this.lblAgenda, this.lblJoinLink
             });
 
-            // ── Buttons ───────────────────────────────────────────
             this.btnDelete.BackColor                = Color.FromArgb(230, 67, 60);
             this.btnDelete.ForeColor                = Color.White;
             this.btnDelete.FlatStyle                = FlatStyle.Flat;
             this.btnDelete.FlatAppearance.BorderSize = 0;
             this.btnDelete.Font                     = new Font("Segoe UI", 9, FontStyle.Bold);
-            this.btnDelete.Location                 = new Point(25, 170);   // sẽ được điều chỉnh trong LoadData()
+            this.btnDelete.Location                 = new Point(25, 170);
             this.btnDelete.Size                     = new Size(100, 35);
             this.btnDelete.Text                     = "🗑 Xóa";
             this.btnDelete.Cursor                   = Cursors.Hand;
@@ -130,7 +124,6 @@ namespace Add_Celendar_Appointment
             this.btnClose.Cursor                    = Cursors.Hand;
             this.btnClose.Click                    += new EventHandler(this.btnClose_Click);
 
-            // ── Form ──────────────────────────────────────────────
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode       = AutoScaleMode.Font;
             this.BackColor           = Color.White;

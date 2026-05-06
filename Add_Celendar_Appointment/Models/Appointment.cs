@@ -4,7 +4,6 @@ using System.Text.Json.Serialization;
 
 namespace Add_Celendar_Appointment.Models
 {
-    // Khai báo polymorphic JSON: $type = "appointment" hoặc "group"
     [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
     [JsonDerivedType(typeof(Appointment),   typeDiscriminator: "appointment")]
     [JsonDerivedType(typeof(GroupMeeting),  typeDiscriminator: "group")]
